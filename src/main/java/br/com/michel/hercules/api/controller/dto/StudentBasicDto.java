@@ -2,7 +2,8 @@ package br.com.michel.hercules.api.controller.dto;
 
 import java.util.List;
 
-import br.com.michel.hercules.model.Grade;
+import org.springframework.data.domain.Page;
+
 import br.com.michel.hercules.model.Student;
 
 public class StudentBasicDto {
@@ -25,8 +26,8 @@ public class StudentBasicDto {
 			this.lastFiveGrades = studentGrades;
 	}
 
-	public static List<StudentBasicDto> convert(List<Student> students) {
-		return students.stream().map(StudentBasicDto::new).toList();
+	public static List<StudentBasicDto> convert(Page<Student> students) {
+		return students.map(StudentBasicDto::new).toList();
 	}
 
 	public String getName() {
