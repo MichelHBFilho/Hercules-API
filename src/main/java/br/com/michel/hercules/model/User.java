@@ -10,10 +10,13 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "users")
@@ -30,6 +33,8 @@ public class User implements UserDetails {
 	private List<Profile> profiles = new ArrayList<>();
 	private String email;
 	private String password;
+	@OneToOne(fetch = FetchType.LAZY, mappedBy = "login")
+	private Person person;
 
 	public User() {
 	}
@@ -40,6 +45,14 @@ public class User implements UserDetails {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public Person getPerson() {
+		return person;
+	}
+
+	public void setPerson(Person person) {
+		this.person = person;
 	}
 
 	@Override

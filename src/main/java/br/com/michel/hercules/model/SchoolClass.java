@@ -23,7 +23,7 @@ public class SchoolClass {
 	private Integer classNumber;
 	private Integer year;
 	private String room;
-	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "schoolClass")
 	private List<Student> students = new ArrayList<>();
 	@ManyToMany
 	private List<Employee> teachers = new ArrayList<>();

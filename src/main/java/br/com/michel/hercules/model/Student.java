@@ -5,54 +5,31 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "students")
-public class Student {
+@DiscriminatorValue("S")
+public class Student extends Person {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
-	private String name;
 	private String register;
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.LAZY)
 	private Responsible responsible;
-	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private User login;
 	@ManyToOne(fetch = FetchType.LAZY)
 	private SchoolClass schoolClass;
-	private String cpf;
 	private String studentPicture;
 	private LocalDate birthDay;
-	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "student")
 	private List<Grade> grades = new ArrayList<>();
 
 	public Student() {
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
 	}
 
 	public String getRegister() {
@@ -71,28 +48,12 @@ public class Student {
 		this.responsible = responsible;
 	}
 
-	public User getLogin() {
-		return login;
-	}
-
-	public void setLogin(User login) {
-		this.login = login;
-	}
-
 	public SchoolClass getSchoolClass() {
 		return schoolClass;
 	}
 
 	public void setSchoolClass(SchoolClass schoolClass) {
 		this.schoolClass = schoolClass;
-	}
-
-	public String getCpf() {
-		return cpf;
-	}
-
-	public void setCpf(String cpf) {
-		this.cpf = cpf;
 	}
 
 	public String getStudentPicture() {
@@ -109,6 +70,14 @@ public class Student {
 
 	public void setBirthDay(LocalDate birthDay) {
 		this.birthDay = birthDay;
+	}
+
+	public List<Grade> getGrades() {
+		return grades;
+	}
+
+	public void setGrades(List<Grade> grades) {
+		this.grades = grades;
 	}
 
 }

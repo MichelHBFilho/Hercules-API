@@ -18,7 +18,9 @@ public class Grade {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	@ManyToOne(fetch = FetchType.LAZY)
 	private Student student;
+	@ManyToOne(fetch = FetchType.LAZY)
 	private Employee teacher;
 	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private Subject subject;

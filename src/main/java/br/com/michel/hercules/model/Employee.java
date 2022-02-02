@@ -3,6 +3,7 @@ package br.com.michel.hercules.model;
 import java.time.LocalDate;
 
 import javax.persistence.CascadeType;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -14,37 +15,15 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "employees")
-public class Employee {
+@DiscriminatorValue("E")
+public class Employee extends Person {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
-	private String name;
 	@ManyToOne
 	private Role role;
-	private String cpf;
-	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private User login;
 	private LocalDate birthDay;
 	private LocalDate contractDate;
 
 	public Employee() {
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
 	}
 
 	public String getRole() {
@@ -53,22 +32,6 @@ public class Employee {
 
 	public void setRole(Role role) {
 		this.role = role;
-	}
-
-	public String getCpf() {
-		return cpf;
-	}
-
-	public void setCpf(String cpf) {
-		this.cpf = cpf;
-	}
-
-	public User getLogin() {
-		return login;
-	}
-
-	public void setLogin(User login) {
-		this.login = login;
 	}
 
 	public LocalDate getBirthDay() {
