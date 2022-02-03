@@ -22,13 +22,24 @@ public class Grade {
 	private Student student;
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Employee teacher;
-	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.EAGER)
 	private Subject subject;
 	private String description;
 	private BigDecimal value;
 
 	public Grade() {
 	}
+
+	public Grade(Student student, Employee teacher, Subject subject, String description, BigDecimal value) {
+		super();
+		this.student = student;
+		this.teacher = teacher;
+		this.subject = subject;
+		this.description = description;
+		this.value = value;
+	}
+
+
 
 	public Long getId() {
 		return id;

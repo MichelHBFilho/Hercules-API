@@ -12,9 +12,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,10 +27,14 @@ import br.com.michel.hercules.api.controller.dto.StudentBasicDto;
 import br.com.michel.hercules.api.controller.dto.StudentDto;
 import br.com.michel.hercules.api.controller.form.StudentForm;
 import br.com.michel.hercules.model.Grade;
+import br.com.michel.hercules.model.Responsible;
 import br.com.michel.hercules.model.Student;
+import br.com.michel.hercules.repository.EmployeeRepository;
+import br.com.michel.hercules.repository.GradeRepository;
 import br.com.michel.hercules.repository.ResponsibleRepository;
 import br.com.michel.hercules.repository.SchoolClassRepository;
 import br.com.michel.hercules.repository.StudentRepository;
+import br.com.michel.hercules.repository.SubjectRepository;
 
 @RestController
 @RequestMapping("/api")
@@ -43,6 +49,12 @@ public class StudentsController {
 	private ResponsibleRepository responsibleRepository;
 	@Autowired
 	private SchoolClassRepository schoolClassRepository;
+	@Autowired
+	private EmployeeRepository employeeRepository;
+	@Autowired
+	private SubjectRepository subjectRepository;
+	@Autowired
+	private GradeRepository gradeRepository;
 	
 	@GetMapping("/students/{schoolClass}")
 	public List<StudentBasicDto> listSchoolClass(
@@ -73,6 +85,19 @@ public class StudentsController {
 		return new StudentDto(student);
 	}
 	
+	@PostMapping("/student/{register}/grades")
+	public ResponseEntity<GradeDto> newGrade(
+			@RequestBody GradeForm gradeForm,
+			@PathVariable String register
+	) {
+		Student student = studentRepository.findByRegister(register);
+		gradeForm.setStudent(student);
+		Grade grade = gradeForm.toGrade(employeeRepository, subjectRepository);
+		gradeRepository.save(grade);
+		
+		return ResponseEntity.created(null).body(new GradeDto(grade));
+	}
+	
 	@PostMapping(value = "/student", consumes = {"*/*"})
 	public ResponseEntity<StudentDto> newStudent(
 			@RequestPart(name = "file", required = false) MultipartFile file,
@@ -85,6 +110,22 @@ public class StudentsController {
 		
 		URI uri = URI.create("/student/" + student.getRegister());
 		return ResponseEntity.created(uri).body(new StudentDto(student));
+	}
+	
+	@DeleteMapping("/student/{register}")
+	public ResponseEntity<?> deleteStudent(
+			@PathVariable String register
+	) {
+		Student student = studentRepository.findByRegister(register);
+		Long responsibleId = student.getResponsible().getId();
+		studentRepository.delete(student);
+		
+		Responsible responsible = responsibleRepository.getById(responsibleId);
+		
+		if(responsible.getStudents().isEmpty()) 
+			responsibleRepository.delete(responsible);
+		
+		return ResponseEntity.ok().build();
 	}
 	
 }
