@@ -31,6 +31,26 @@ public class Student extends Person {
 
 	public Student() {
 	}
+	
+	public Student(
+			String name,
+			String cpf,
+			User login,
+			String register,
+			Responsible responsible,
+			SchoolClass schoolClass,
+			String studentPicture,
+			LocalDate birthDay
+	) {
+		super(name, cpf, login);
+		this.register = register;
+		this.responsible = responsible;
+		this.schoolClass = schoolClass;
+		this.studentPicture = studentPicture;
+		this.birthDay = birthDay;
+	}
+
+
 
 	public String getRegister() {
 		return register;
