@@ -1,4 +1,4 @@
-package br.com.michel.hercules.api.controller;
+package br.com.michel.hercules.api.controller.form;
 
 import java.math.BigDecimal;
 

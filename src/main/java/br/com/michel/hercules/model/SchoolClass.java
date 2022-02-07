@@ -76,8 +76,7 @@ public class SchoolClass {
 	}
 
 	public void addTeacher(Employee teacher) {
-		if(teacher.getRole() == "TEACHER")
-			this.teachers.add(teacher);
+		this.teachers.add(teacher);
 	}
 
 }

@@ -16,6 +16,7 @@ import br.com.michel.hercules.model.Responsible;
 import br.com.michel.hercules.model.SchoolClass;
 import br.com.michel.hercules.model.Student;
 import br.com.michel.hercules.model.User;
+import br.com.michel.hercules.repository.ProfileRepository;
 import br.com.michel.hercules.repository.ResponsibleRepository;
 import br.com.michel.hercules.repository.SchoolClassRepository;
 
@@ -40,6 +41,7 @@ public class StudentForm {
 	public Student toStudent(
 			ResponsibleRepository responsibleRepository,
 			SchoolClassRepository schoolClassRepository,
+			ProfileRepository profileRepository,
 			String resourcesPath
 	) {
 		Responsible responsible = responsibleRepository.findByCpf(this.responsibleCpf);
@@ -49,6 +51,7 @@ public class StudentForm {
 		User user = new User();
 		user.setEmail(this.register);
 		user.setPassword(passwordEncoder.encode(this.cpf));
+		user.addProfile(profileRepository.findByAuthority("ROLE_STUDENT"));
 		
 		String path;
 		

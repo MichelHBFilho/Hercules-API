@@ -14,32 +14,12 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "employees")
 @DiscriminatorValue("E")
 public class Employee extends Person {
 
-	@ManyToOne
-	private Role role;
-	private LocalDate birthDay;
 	private LocalDate contractDate;
 
 	public Employee() {
-	}
-
-	public String getRole() {
-		return role.getName();
-	}
-
-	public void setRole(Role role) {
-		this.role = role;
-	}
-
-	public LocalDate getBirthDay() {
-		return birthDay;
-	}
-
-	public void setBirthDay(LocalDate birthDay) {
-		this.birthDay = birthDay;
 	}
 
 	public LocalDate getContractDate() {

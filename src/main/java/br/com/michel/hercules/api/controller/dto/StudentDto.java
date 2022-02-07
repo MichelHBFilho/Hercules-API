@@ -14,6 +14,7 @@ public class StudentDto {
 	private String picture;
 	private LocalDate birthDay;
 	private List<GradeDto> grades;
+	private String register;
 
 	public StudentDto(Student student) {
 		this.name = student.getName();
@@ -23,6 +24,7 @@ public class StudentDto {
 		this.picture = student.getStudentPicture();
 		this.birthDay = student.getBirthDay();
 		this.grades = GradeDto.convert(student.getGrades());
+		this.register = student.getRegister();
 	}
 
 	public String getName() {
@@ -51,6 +53,14 @@ public class StudentDto {
 
 	public List<GradeDto> getGrades() {
 		return grades;
+	}
+
+	public String getRegister() {
+		return register;
+	}
+
+	public void setRegister(String register) {
+		this.register = register;
 	}
 
 }
