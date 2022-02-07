@@ -15,8 +15,7 @@ import javax.persistence.Table;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Entity
 @Table(name = "users")
@@ -100,6 +99,14 @@ public class User implements UserDetails {
 	@Override
 	public boolean isEnabled() {
 		return true;
+	}
+
+	public void setAndEncodePassword(String password) {
+		
+		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+		
+		this.password = encoder.encode(password);
+		
 	}
 
 }

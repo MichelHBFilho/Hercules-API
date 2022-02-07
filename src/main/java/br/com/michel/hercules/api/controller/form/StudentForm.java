@@ -47,10 +47,9 @@ public class StudentForm {
 		Responsible responsible = responsibleRepository.findByCpf(this.responsibleCpf);
 		SchoolClass schoolClass = schoolClassRepository.findByClassNumber(this.classNumber);
 		
-		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 		User user = new User();
 		user.setEmail(this.register);
-		user.setPassword(passwordEncoder.encode(this.cpf));
+		user.setAndEncodePassword(this.cpf);
 		user.addProfile(profileRepository.findByAuthority("ROLE_STUDENT"));
 		
 		String path;
