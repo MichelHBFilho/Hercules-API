@@ -1,5 +1,6 @@
 package br.com.michel.hercules.model;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +32,14 @@ public class SchoolClass {
 	public SchoolClass() {
 	}
 
+	public BigDecimal getAverage() {
+		List<Grade> grades = students.stream().map(s -> s.getGrades()).flatMap(List::stream).toList();
+		BigDecimal sum = BigDecimal.ZERO;
+		for(Grade grade : grades) 
+			sum = sum.add(grade.getValue());
+		return sum.divide(new BigDecimal(grades.size()));
+	}
+	
 	public Long getId() {
 		return id;
 	}
@@ -78,5 +87,13 @@ public class SchoolClass {
 	public void addTeacher(Employee teacher) {
 		this.teachers.add(teacher);
 	}
+
+	@Override
+	public String toString() {
+		return "SchoolClass  {\n\tid=" + id + ", \n\tclassNumber=" + classNumber + ", \n\tyear=" + year + ", \n\troom="
+				+ room + ", \n\tstudents=" + students + ", \n\tteachers=" + teachers + "\n}";
+	}
+	
+	
 
 }

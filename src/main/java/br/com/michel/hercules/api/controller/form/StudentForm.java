@@ -8,7 +8,6 @@ import java.time.format.DateTimeFormatter;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.multipart.MultipartFile;
 
 import br.com.michel.hercules.exceptions.InvalidContentTypeException;
@@ -19,6 +18,7 @@ import br.com.michel.hercules.model.User;
 import br.com.michel.hercules.repository.ProfileRepository;
 import br.com.michel.hercules.repository.ResponsibleRepository;
 import br.com.michel.hercules.repository.SchoolClassRepository;
+import br.com.michel.hercules.validation.CPF;
 
 public class StudentForm {
 	
@@ -27,12 +27,14 @@ public class StudentForm {
 	@NotBlank
 	private String name;
 	@NotBlank
+	@CPF
 	private String cpf;
 	@NotBlank
 	private String register;
 	@NotNull
 	private LocalDate birthDay;
 	@NotBlank
+	@CPF
 	private String responsibleCpf;
 	@NotNull
 	private Integer classNumber;

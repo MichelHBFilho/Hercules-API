@@ -4,12 +4,15 @@ import javax.validation.constraints.NotBlank;
 
 import br.com.michel.hercules.model.Responsible;
 import br.com.michel.hercules.model.User;
+import br.com.michel.hercules.repository.ProfileRepository;
+import br.com.michel.hercules.validation.CPF;
 
 public class ResponsibleForm {
 
 	@NotBlank
 	private String name;
 	@NotBlank
+	@CPF
 	private String cpf;
 	@NotBlank
 	private String street;
@@ -17,12 +20,12 @@ public class ResponsibleForm {
 	private String neighborhood;
 	private String complement = "";
 	
-	public Responsible toResponsible() {
+	public Responsible toResponsible(ProfileRepository profileRepository) {
 		
 		User user = new User();
 		user.setEmail(name);
 		user.setAndEncodePassword(cpf);
-		
+		user.addProfile(profileRepository.findByAuthority("ROLE_RESPONSIBLE"));		
 		return new Responsible(name, cpf, user, street, neighborhood, complement);
 		
 	}

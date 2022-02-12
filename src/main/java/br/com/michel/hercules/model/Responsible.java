@@ -3,6 +3,7 @@ package br.com.michel.hercules.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -15,7 +16,7 @@ public class Responsible extends Person {
 	
 	@Embedded
 	private Adress adress = new Adress();
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "responsible")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "responsible", cascade = CascadeType.ALL)
 	private List<Student> students = new ArrayList<>();
 
 	public Responsible() {

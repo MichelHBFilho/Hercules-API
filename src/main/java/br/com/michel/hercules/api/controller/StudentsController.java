@@ -32,7 +32,7 @@ import br.com.michel.hercules.api.controller.dto.StudentDto;
 import br.com.michel.hercules.api.controller.form.GradeForm;
 import br.com.michel.hercules.api.controller.form.StudentForm;
 import br.com.michel.hercules.api.controller.form.UpdateStudentForm;
-import br.com.michel.hercules.exceptions.InvalidRegisterException;
+import br.com.michel.hercules.exceptions.NotFoundException;
 import br.com.michel.hercules.model.Grade;
 import br.com.michel.hercules.model.Responsible;
 import br.com.michel.hercules.model.Student;
@@ -91,8 +91,12 @@ public class StudentsController {
 	public StudentDto findStudent(
 			@PathVariable String register
 	) {
-		Student student = studentRepository.findByRegister(register).get();
-		return new StudentDto(student);
+		Optional<Student> optional = studentRepository.findByRegister(register);
+		
+		if(optional.isEmpty())
+			throw new NotFoundException("Student");
+		
+		return new StudentDto(optional.get());
 	}
 	
 	@PostMapping("/student/{register}/grades")
@@ -103,7 +107,7 @@ public class StudentsController {
 		Optional<Student> optional = studentRepository.findByRegister(register);
 		
 		if(optional.isEmpty())
-			throw new InvalidRegisterException();
+			throw new NotFoundException("Student");
 		
 		Student student = optional.get();
 		
@@ -136,7 +140,7 @@ public class StudentsController {
 		Optional<Student> optional = studentRepository.findByRegister(register);
 		
 		if(optional.isEmpty())
-			throw new InvalidRegisterException();
+			throw new NotFoundException("Student");
 		
 		Student student = optional.get();
 		
@@ -160,7 +164,7 @@ public class StudentsController {
 		Optional<Student> optional = studentRepository.findByRegister(register);
 		
 		if(optional.isEmpty())
-			throw new InvalidRegisterException();
+			throw new NotFoundException("Student");
 		
 		Student student = optional.get();
 		
