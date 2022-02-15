@@ -21,6 +21,11 @@ public class Employee extends Person {
 
 	public Employee() {
 	}
+	
+	public Employee(String name, String cpf, User user) {
+		super(name, cpf, user);
+		this.contractDate = LocalDate.now();
+	}
 
 	public LocalDate getContractDate() {
 		return contractDate;
