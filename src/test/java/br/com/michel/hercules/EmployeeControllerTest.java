@@ -59,6 +59,7 @@ class EmployeeControllerTest {
 		JSONObject json = new JSONObject();
 		json.put("name", "john");
 		json.put("cpf", "05668586065");
+		json.put("email", "john@gmail.com");
 		
 		mmvc.perform(MockMvcRequestBuilders.post(new URI("/api/employee"))
 					.contentType(MediaType.APPLICATION_JSON)
@@ -69,6 +70,16 @@ class EmployeeControllerTest {
 		Employee employee = employeeRepository.findByCpf("05668586065");
 		
 		mmvc.perform(MockMvcRequestBuilders.get(new URI("/api/employee/" + employee.getId())))
+			.andDo(print())
+			.andExpect(status().isOk());
+		
+		json.clear();
+		json.put("email", "john@gmail.com");
+		json.put("password", "05668586065");
+		
+		mmvc.perform(MockMvcRequestBuilders.post(new URI("/api/auth"))
+				.content(json.toString())
+				.contentType(MediaType.APPLICATION_JSON))
 			.andDo(print())
 			.andExpect(status().isOk());
 	}

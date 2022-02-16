@@ -1,5 +1,6 @@
 package br.com.michel.hercules.api.controller.form;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
 import br.com.michel.hercules.model.Employee;
@@ -11,13 +12,15 @@ public class EmployeeForm {
 
 	@NotBlank
 	private String name;
+	@Email
+	private String email;
 	@CPF
 	private String cpf;
 
 	public Employee toEmployee(ProfileRepository profileRepository, String role) {
 		User user = new User();
 		user.setAndEncodePassword(cpf);
-		user.setEmail(name);
+		user.setEmail(email);
 		user.addProfile(profileRepository.findByAuthority(role));
 		return new Employee(name, cpf, user);
 	}
@@ -28,6 +31,10 @@ public class EmployeeForm {
 
 	public void setCpf(String cpf) {
 		this.cpf = cpf;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 }

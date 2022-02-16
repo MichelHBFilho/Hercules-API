@@ -29,6 +29,7 @@ import org.springframework.web.multipart.MultipartFile;
 import br.com.michel.hercules.api.controller.dto.GradeDto;
 import br.com.michel.hercules.api.controller.dto.StudentBasicDto;
 import br.com.michel.hercules.api.controller.dto.StudentDto;
+import br.com.michel.hercules.api.controller.dto.StudentDtoWithCodes;
 import br.com.michel.hercules.api.controller.form.GradeForm;
 import br.com.michel.hercules.api.controller.form.StudentForm;
 import br.com.michel.hercules.api.controller.form.UpdateStudentForm;
@@ -36,6 +37,7 @@ import br.com.michel.hercules.exceptions.NotFoundException;
 import br.com.michel.hercules.model.Grade;
 import br.com.michel.hercules.model.Responsible;
 import br.com.michel.hercules.model.Student;
+import br.com.michel.hercules.model.User;
 import br.com.michel.hercules.repository.EmployeeRepository;
 import br.com.michel.hercules.repository.GradeRepository;
 import br.com.michel.hercules.repository.ProfileRepository;
@@ -127,6 +129,7 @@ public class StudentsController {
 		Student student = 
 				studentForm.toStudent(responsibleRepository, schoolClassRepository,
 						profileRepository, resourcesPath);
+		
 		studentRepository.save(student);
 		
 		URI uri = URI.create("/student/" + student.getRegister());

@@ -5,6 +5,7 @@ import java.nio.file.Files;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -26,7 +27,8 @@ public class StudentForm {
 	
 	@NotBlank
 	private String name;
-	@NotBlank
+	@Email
+	private String email;
 	@CPF
 	private String cpf;
 	@NotBlank
@@ -50,7 +52,7 @@ public class StudentForm {
 		SchoolClass schoolClass = schoolClassRepository.findByClassNumber(this.classNumber);
 		
 		User user = new User();
-		user.setEmail(this.register);
+		user.setEmail(this.email);
 		user.setAndEncodePassword(this.cpf);
 		user.addProfile(profileRepository.findByAuthority("ROLE_STUDENT"));
 		
@@ -137,6 +139,14 @@ public class StudentForm {
 
 	public void setClassNumber(Integer classNumber) {
 		this.classNumber = classNumber;
+	}
+	
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	
+	public String getEmail() {
+		return email;
 	}
 
 }

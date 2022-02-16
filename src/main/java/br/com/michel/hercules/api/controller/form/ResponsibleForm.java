@@ -1,5 +1,6 @@
 package br.com.michel.hercules.api.controller.form;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
 import br.com.michel.hercules.model.Responsible;
@@ -10,8 +11,9 @@ import br.com.michel.hercules.validation.CPF;
 public class ResponsibleForm {
 
 	@NotBlank
-	private String name;
-	@NotBlank
+	private String name; 
+	@Email
+	private String email;
 	@CPF
 	private String cpf;
 	@NotBlank
@@ -23,7 +25,7 @@ public class ResponsibleForm {
 	public Responsible toResponsible(ProfileRepository profileRepository) {
 		
 		User user = new User();
-		user.setEmail(name);
+		user.setEmail(email);
 		user.setAndEncodePassword(cpf);
 		user.addProfile(profileRepository.findByAuthority("ROLE_RESPONSIBLE"));		
 		return new Responsible(name, cpf, user, street, neighborhood, complement);
@@ -68,6 +70,14 @@ public class ResponsibleForm {
 
 	public void setComplement(String complement) {
 		this.complement = complement;
+	}
+	
+	public String getEmail() {
+		return email;
+	}
+	
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 }
