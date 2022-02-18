@@ -91,31 +91,23 @@ public class StudentsController {
 	public StudentDto findStudent(
 			@PathVariable String register
 	) {
-		Optional<Student> optional = studentRepository.findByRegister(register);
-		
-		if(optional.isEmpty())
-			throw new NotFoundException("Student");
-		
-		return new StudentDto(optional.get());
+		return new StudentDto(studentRepository.findByRegister(register).get());
 	}
 	
 	@PostMapping("/student/{register}/grades")
 	public ResponseEntity<GradeDto> newGrade(
 			@RequestBody GradeForm gradeForm,
 			@PathVariable String register
-	) {
-		Optional<Student> optional = studentRepository.findByRegister(register);
-		
-		if(optional.isEmpty())
-			throw new NotFoundException("Student");
-		
-		Student student = optional.get();
+	) throws Exception {
+		Student student = studentRepository.findByRegister(register).get();
 		
 		gradeForm.setStudent(student);
 		Grade grade = gradeForm.toGrade(employeeRepository, subjectRepository);
 		gradeRepository.save(grade);
 		
-		return ResponseEntity.created(null).body(new GradeDto(grade));
+		return ResponseEntity
+				.created(new URI("/api/" + student.getRegister() + "/grades"))
+				.body(new GradeDto(grade));
 	}
 	
 	@PostMapping(value = "/student", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -138,12 +130,7 @@ public class StudentsController {
 	public ResponseEntity<?> deleteStudent(
 			@PathVariable String register
 	) {
-		Optional<Student> optional = studentRepository.findByRegister(register);
-		
-		if(optional.isEmpty())
-			throw new NotFoundException("Student");
-		
-		Student student = optional.get();
+		Student student = studentRepository.findByRegister(register).get();
 		
 		Long responsibleId = student.getResponsible().getId();
 		studentRepository.delete(student);
@@ -162,12 +149,7 @@ public class StudentsController {
 			@RequestBody UpdateStudentForm form,
 			@PathVariable String register
 	) {
-		Optional<Student> optional = studentRepository.findByRegister(register);
-		
-		if(optional.isEmpty())
-			throw new NotFoundException("Student");
-		
-		Student student = optional.get();
+		Student student = studentRepository.findByRegister(register).get();
 		
 		student = form.update(student, responsibleRepository, schoolClassRepository, studentRepository);
 		

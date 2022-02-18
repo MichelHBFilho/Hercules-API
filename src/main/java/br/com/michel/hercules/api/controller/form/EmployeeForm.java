@@ -17,11 +17,13 @@ public class EmployeeForm {
 	@CPF
 	private String cpf;
 
-	public Employee toEmployee(ProfileRepository profileRepository, String role) {
+	public Employee toEmployee(ProfileRepository profileRepository, Boolean teacher) {
 		User user = new User();
 		user.setAndEncodePassword(cpf);
 		user.setEmail(email);
-		user.addProfile(profileRepository.findByAuthority(role));
+		user.addProfile(profileRepository.findByAuthority("ROLE_EMPLOYEE"));
+		if(teacher) 
+			user.addProfile(profileRepository.findByAuthority("ROLE_TEACHER"));
 		return new Employee(name, cpf, user);
 	}
 

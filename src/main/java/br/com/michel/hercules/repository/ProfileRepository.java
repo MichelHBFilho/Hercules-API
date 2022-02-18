@@ -7,7 +7,6 @@ import br.com.michel.hercules.model.Profile;
 
 public interface ProfileRepository extends JpaRepository<Profile, Long> {
 	
-	@Cacheable("authority")
 	Profile findByAuthority(String authority);
 	
 }

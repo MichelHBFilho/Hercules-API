@@ -61,6 +61,10 @@ public class Person {
 		return login;
 	}
 
+	public Long getLoginId() {
+		return login.getId();
+	}
+	
 	public void setLogin(User login) {
 		this.login = login;
 	}

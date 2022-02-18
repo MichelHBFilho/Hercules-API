@@ -13,8 +13,10 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import br.com.michel.hercules.api.filters.PermitResponsibleFilter;
+import br.com.michel.hercules.api.filters.ResponsibleInfoFilter;
+import br.com.michel.hercules.api.filters.StudentInfoFilter;
 import br.com.michel.hercules.repository.ProfileRepository;
+import br.com.michel.hercules.repository.StudentRepository;
 import br.com.michel.hercules.repository.UserRepository;
 
 @EnableWebSecurity
@@ -29,6 +31,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	private AuthService authService;
 	@Autowired
 	private TokenService tokenService;
+	@Autowired
+	private StudentRepository studentRepository;
 	
 	@Bean
 	@Override
@@ -55,7 +59,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 			.and()
 			.addFilterBefore(new AuthViaTokenFilter(userRepository, tokenService), UsernamePasswordAuthenticationFilter.class)
-			.addFilterAfter(new PermitResponsibleFilter(profileRepository), AuthViaTokenFilter.class);
+			.addFilterAfter(new ResponsibleInfoFilter(profileRepository), AuthViaTokenFilter.class)
+			.addFilterAfter(new StudentInfoFilter(studentRepository, profileRepository), ResponsibleInfoFilter.class);
 			
 	}
 	

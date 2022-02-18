@@ -62,6 +62,10 @@ public class Student extends Person {
 	public Responsible getResponsible() {
 		return responsible;
 	}
+	
+	public Long getResponsibleId() {
+		return responsible.getId();
+	}
 
 	public void setResponsible(Responsible responsible) {
 		this.responsible = responsible;

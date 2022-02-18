@@ -57,11 +57,11 @@ public class EmployeeController {
 	@PostMapping("/employee")
 	public ResponseEntity<EmployeeDto> newEmployee(
 			@RequestBody @Valid EmployeeForm employeeForm,
-			@RequestParam(required = false) String teacher
+			@RequestParam(required = false) String stringIsTeacher
 	) throws URISyntaxException {
 		Employee employee;
-		if(teacher == null) employee = employeeForm.toEmployee(profileRepository, "ROLE_EMPLOYEE");
-		else employee = employeeForm.toEmployee(profileRepository, "ROLE_TEACHER");
+		boolean isTeacher = Boolean.valueOf(stringIsTeacher);
+		employee = employeeForm.toEmployee(profileRepository, isTeacher);
 		employeeRepository.save(employee);
 		return ResponseEntity
 				.created(new URI("/api/employee/" + employee.getId())).body(new EmployeeDto(employee));

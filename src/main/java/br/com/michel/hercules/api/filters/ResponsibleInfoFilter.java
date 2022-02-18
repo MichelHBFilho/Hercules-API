@@ -13,11 +13,11 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import br.com.michel.hercules.model.User;
 import br.com.michel.hercules.repository.ProfileRepository;
 
-public class PermitResponsibleFilter extends OncePerRequestFilter {
+public class ResponsibleInfoFilter extends OncePerRequestFilter {
 
 	private ProfileRepository profileRepository;
 	
-	public PermitResponsibleFilter(ProfileRepository profileRepository) {
+	public ResponsibleInfoFilter(ProfileRepository profileRepository) {
 		this.profileRepository = profileRepository;
 	}
 
