@@ -67,7 +67,7 @@ class EmployeeControllerTest {
 			.andDo(print())
 			.andExpect(status().isCreated());
 		
-		Employee employee = employeeRepository.findByCpf("05668586065");
+		Employee employee = employeeRepository.findByCpf("05668586065").get();
 		
 		mmvc.perform(MockMvcRequestBuilders.get(new URI("/api/employee/" + employee.getId())))
 			.andDo(print())
@@ -99,7 +99,7 @@ class EmployeeControllerTest {
 			.andDo(print())
 			.andExpect(status().isCreated());
 		
-		Employee employee = employeeRepository.findByCpf("35386441019");
+		Employee employee = employeeRepository.findByCpf("35386441019").get();
 		
 		mmvc.perform(MockMvcRequestBuilders.get(new URI("/api/employee/" + employee.getId())))
 			.andDo(print())
@@ -120,7 +120,7 @@ class EmployeeControllerTest {
 			.andDo(print())
 			.andExpect(status().isCreated());
 		
-		Employee employee = employeeRepository.findByCpf("35386441019");
+		Employee employee = employeeRepository.findByCpf("35386441019").get();
 		
 		mmvc.perform(MockMvcRequestBuilders.delete(new URI("/api/employee/" + employee.getId())))
 			.andDo(print())

@@ -22,4 +22,15 @@ public class ExceptionsHandler {
 		return ResponseEntity.status(error.getStatus()).body(error);
 	}
 	
+	@ExceptionHandler(InvalidCPFException.class)
+	public ResponseEntity<ErrorDto> invalidCPF(final HttpServletRequest request,
+			final InvalidCPFException e) {
+		ErrorDto error = new ErrorDto();
+		error.setStatus(400);
+		error.setMessage("CPF: " + e.getInvalidCpf() + " Is invalid");
+		error.setPath(request.getRequestURI());
+		
+		return ResponseEntity.status(error.getStatus()).body(error);
+	}
+	
 }

@@ -1,10 +1,12 @@
 package br.com.michel.hercules.api.controller.form;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+import br.com.michel.hercules.exceptions.NotFoundException;
 import br.com.michel.hercules.model.Employee;
 import br.com.michel.hercules.model.Grade;
 import br.com.michel.hercules.model.Student;
@@ -28,7 +30,13 @@ public class GradeForm {
 		EmployeeRepository employeeRepository,
 		SubjectRepository subjectRepository
 	) {
-		Employee teacher = employeeRepository.findByCpf(teacherCpf);
+		Optional<Employee> optional = employeeRepository.findByCpf(teacherCpf);
+		
+		if(optional.isEmpty())
+			throw new NotFoundException("Employee");
+		
+		Employee teacher = optional.get();
+		
 		Subject subject = subjectRepository.findByName(this.subject);
 		
 		return new Grade(

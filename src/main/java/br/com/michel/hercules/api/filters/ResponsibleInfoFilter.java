@@ -15,12 +15,6 @@ import br.com.michel.hercules.repository.ProfileRepository;
 
 public class ResponsibleInfoFilter extends OncePerRequestFilter {
 
-	private ProfileRepository profileRepository;
-	
-	public ResponsibleInfoFilter(ProfileRepository profileRepository) {
-		this.profileRepository = profileRepository;
-	}
-
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
@@ -29,9 +23,15 @@ public class ResponsibleInfoFilter extends OncePerRequestFilter {
 		
 		User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		
-		if(path.endsWith(user.getPerson().getName()) || 
-				user.getAuthorities().contains(profileRepository.findByAuthority("ROLE_EMPLOYEE"))) 
+		if(Util.isEmployee(user)) {
 			filterChain.doFilter(request, response);
+			return;
+		}
+		
+		if(path.endsWith(user.getPerson().getName()) && request.getMethod().equals("GET")) {
+			filterChain.doFilter(request, response);
+			return;
+		}
 		
 		response.sendError(401, "Unauthorized");
 	}
@@ -41,7 +41,7 @@ public class ResponsibleInfoFilter extends OncePerRequestFilter {
 		String path = request.getRequestURI();
 		String method = request.getMethod();
 		
-		if(path.startsWith("/api/responsible") && method.equals("GET"))
+		if(path.startsWith("/api/responsible"))
 			return false;
 		
 		return true;

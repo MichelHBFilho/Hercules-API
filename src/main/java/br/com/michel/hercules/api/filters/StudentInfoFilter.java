@@ -30,17 +30,6 @@ public class StudentInfoFilter extends OncePerRequestFilter {
 		this.studentRepository = studentRepository;
 		this.profileRepository = profileRepository;
 	}
-
-	private boolean isEmployee(User user) {
-		List<Profile> profiles = (List<Profile>) user.getAuthorities();
-		
-		for (Profile p : profiles) {
-			if(p.getAuthority().equals("ROLE_EMPLOYEE"))
-				return true;
-		}
-		
-		return false;
-	}
 	
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -54,7 +43,7 @@ public class StudentInfoFilter extends OncePerRequestFilter {
 		
 		Student student = optional.get();
 		
-		if(isEmployee(user)) {
+		if(Util.isEmployee(user)) {
 			filterChain.doFilter(request, response);
 			return;
 		}

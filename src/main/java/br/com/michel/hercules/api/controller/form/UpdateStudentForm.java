@@ -1,8 +1,8 @@
 package br.com.michel.hercules.api.controller.form;
 
-import javax.validation.Validation;
-import javax.validation.Validator;
+import java.util.Optional;
 
+import br.com.michel.hercules.exceptions.NotFoundException;
 import br.com.michel.hercules.model.SchoolClass;
 import br.com.michel.hercules.model.Student;
 import br.com.michel.hercules.repository.ResponsibleRepository;
@@ -22,7 +22,13 @@ public class UpdateStudentForm {
 			SchoolClassRepository schoolClassRepository,
 			StudentRepository studentRepository
 	) {
-		SchoolClass schoolClass = schoolClassRepository.findByClassNumber(classNumber);
+		Optional<SchoolClass> optional = schoolClassRepository.findByClassNumber(classNumber);
+		
+		if(optional.isEmpty())
+			throw new NotFoundException("School Class");
+		
+		SchoolClass schoolClass = optional.get();
+		
 		if(register != null) 
 			student.setRegister(register);
 		if(responsibleCpf != null && CPFValidatorImpl.isValid(responsibleCpf)) 

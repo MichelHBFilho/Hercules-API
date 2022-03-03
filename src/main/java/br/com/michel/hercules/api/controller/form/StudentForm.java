@@ -4,6 +4,7 @@ import java.io.File;
 import java.nio.file.Files;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -12,6 +13,7 @@ import javax.validation.constraints.NotNull;
 import org.springframework.web.multipart.MultipartFile;
 
 import br.com.michel.hercules.exceptions.InvalidContentTypeException;
+import br.com.michel.hercules.exceptions.NotFoundException;
 import br.com.michel.hercules.model.Responsible;
 import br.com.michel.hercules.model.SchoolClass;
 import br.com.michel.hercules.model.Student;
@@ -49,7 +51,12 @@ public class StudentForm {
 			String resourcesPath
 	) {
 		Responsible responsible = responsibleRepository.findByCpf(this.responsibleCpf);
-		SchoolClass schoolClass = schoolClassRepository.findByClassNumber(this.classNumber);
+		Optional<SchoolClass> optional = schoolClassRepository.findByClassNumber(this.classNumber);
+		
+		if(optional.isEmpty()) 
+			throw new NotFoundException("School Class");
+		
+		SchoolClass schoolClass = optional.get();
 		
 		User user = new User();
 		user.setEmail(this.email);

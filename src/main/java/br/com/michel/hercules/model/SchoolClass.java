@@ -26,7 +26,7 @@ public class SchoolClass {
 	private String room;
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "schoolClass")
 	private List<Student> students = new ArrayList<>();
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.LAZY)
 	private List<Employee> teachers = new ArrayList<>();
 
 	public SchoolClass() {
@@ -86,6 +86,14 @@ public class SchoolClass {
 
 	public void addTeacher(Employee teacher) {
 		this.teachers.add(teacher);
+	}
+	
+	public void deleteTeacher(Employee teacher) {
+		this.teachers.remove(teacher);
+	}
+	
+	public void setTeachers(List<Employee> teachers) {
+		this.teachers = teachers;
 	}
 
 	@Override

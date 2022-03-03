@@ -11,7 +11,7 @@ import static java.lang.annotation.ElementType.*;
 import static java.lang.annotation.RetentionPolicy.*;
 
 @Constraint(validatedBy = CPFValidatorImpl.class)
-@Target({ FIELD })
+@Target({ FIELD, METHOD, PARAMETER })
 @Retention(RUNTIME)
 @Documented
 public @interface CPF {

@@ -59,7 +59,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 			.and()
 			.addFilterBefore(new AuthViaTokenFilter(userRepository, tokenService), UsernamePasswordAuthenticationFilter.class)
-			.addFilterAfter(new ResponsibleInfoFilter(profileRepository), AuthViaTokenFilter.class)
+			.addFilterAfter(new ResponsibleInfoFilter(), AuthViaTokenFilter.class)
 			.addFilterAfter(new StudentInfoFilter(studentRepository, profileRepository), ResponsibleInfoFilter.class);
 			
 	}
