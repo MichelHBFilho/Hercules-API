@@ -54,8 +54,6 @@ class StudentsControllerTest {
 	@Autowired
 	private MockMvc mmvc;
 	
-	private static JSONParser parser = new JSONParser();
-	
 	@BeforeEach
 	private void arrange() {
 		User user1 = new User();
@@ -133,21 +131,9 @@ class StudentsControllerTest {
 		profileRepository.deleteAll();
 	}
 	
-	private String auth(String email, String password) throws Exception {
-		JSONObject json = new JSONObject();
-		json.put("email", email);
-		json.put("password", password);
-		MvcResult result = mmvc.perform(MockMvcRequestBuilders.post(new URI("/api/auth"))
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(json.toString()))
-			.andReturn();
-		System.out.print(result.getResponse().getContentAsString());
-		return (String) ((JSONObject)parser.parse(result.getResponse().getContentAsString())).get("token");
-	}
-	
 	@Test
 	void testFindStudentShouldReturn401() throws Exception {
-		String token = auth("outlook@outlook.com", "shitnicepass");
+		String token = TestUtil.auth("outlook@outlook.com", "shitnicepass", mmvc);
 		mmvc.perform(MockMvcRequestBuilders.get(new URI("/api/student/00000"))
 				.header("Authorization", "Bearer " + token))
 			.andDo(print())
@@ -156,7 +142,7 @@ class StudentsControllerTest {
 	
 	@Test
 	void testFindStudentShouldReturn200WithStudent() throws Exception {
-		String token = auth("gmail@gmail.com", "passwordsecret");
+		String token = TestUtil.auth("gmail@gmail.com", "passwordsecret", mmvc);
 		mmvc.perform(MockMvcRequestBuilders.get(new URI("/api/student/00000"))
 				.header("Authorization", "Bearer " + token))
 			.andDo(print())
@@ -165,7 +151,7 @@ class StudentsControllerTest {
 	
 	@Test
 	void testFindStudentShouldReturn200WithResponsible() throws Exception {
-		String token = auth("yahoo@yahoo.com", "nicepassword");
+		String token = TestUtil.auth("yahoo@yahoo.com", "nicepassword", mmvc);
 		mmvc.perform(MockMvcRequestBuilders.get(new URI("/api/student/00000"))
 				.header("Authorization", "Bearer " + token))
 			.andDo(print())
@@ -174,7 +160,7 @@ class StudentsControllerTest {
 
 	@Test
 	void testDeleteStudentShouldReturn200() throws Exception {
-		String token = auth("email@email.com", "secretpassword");
+		String token = TestUtil.auth("email@email.com", "secretpassword", mmvc);
 		mmvc.perform(MockMvcRequestBuilders.delete(new URI("/api/student/00000"))
 				.header("Authorization", "Bearer " + token))
 			.andDo(print())
@@ -183,7 +169,7 @@ class StudentsControllerTest {
 	
 	@Test
 	void testDeleteStudentShouldReturn401() throws Exception {
-		String token = auth("gmail@gmail.com", "passwordsecret");
+		String token = TestUtil.auth("gmail@gmail.com", "passwordsecret", mmvc);
 		mmvc.perform(MockMvcRequestBuilders.delete(new URI("/api/student/00000"))
 				.header("Authorization", "Bearer " + token))
 			.andDo(print())

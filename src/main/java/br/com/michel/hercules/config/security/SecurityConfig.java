@@ -53,6 +53,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		
 		http
 			.authorizeRequests()
+			.antMatchers("/api/class/**").hasRole("EMPLOYEE")
+			.antMatchers("/api/students/**").hasRole("EMPLOYEE")
+			.antMatchers("/api/student/**").authenticated()
+			.antMatchers("/api/responsible/**").hasAnyRole("RESPONSIBLE", "EMPLOYEE")
+			.antMatchers("/api/auth/update").authenticated()
+			.antMatchers("/api/employee/**").hasRole("EMPLOYEE")
 			.anyRequest().permitAll()
 			.and()
 			.csrf().disable()

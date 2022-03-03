@@ -1,5 +1,7 @@
 package br.com.michel.hercules.api.controller;
 
+import java.util.Optional;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,9 +10,11 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -49,16 +53,12 @@ public class AuthController {
 	}
 	
 	@PutMapping("/auth/update")
-	public ResponseEntity update(
+	public ResponseEntity<?> update(
 			@RequestBody @Valid UpdateUserForm form
 	) {
+		User user = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		
-		LoginForm loginForm = new LoginForm();
-		loginForm.setEmail(form.getEmail());
-		loginForm.setPassword(form.getPassword());
-		this.auth(loginForm);
-		
-		User user = form.toUser(userRepository);
+		user = form.toUser(userRepository, user);
 		
 		userRepository.save(user);
 		

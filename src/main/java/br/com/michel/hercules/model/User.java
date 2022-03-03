@@ -65,6 +65,10 @@ public class User implements UserDetails {
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		return profiles;
 	}
+	
+	public void setProfiles(List<Profile> profiles) {
+		this.profiles = profiles;
+	}
 
 	public void addProfile(Profile profile) {
 		profiles.add(profile);

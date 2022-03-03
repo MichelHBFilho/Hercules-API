@@ -46,19 +46,6 @@ class ResponsibleControllerTest {
 	@Autowired
 	private ProfileRepository profRepo;
 	
-	private static JSONParser parser = new JSONParser();
-	
-	private String auth(String email, String password) throws Exception {
-		JSONObject json = new JSONObject();
-		json.put("email", email);
-		json.put("password", password);
-		MvcResult result = mmvc.perform(MockMvcRequestBuilders.post(new URI("/api/auth"))
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(json.toString()))
-			.andReturn();
-		return (String) ((JSONObject)parser.parse(result.getResponse().getContentAsString())).get("token");
-	}
-	
 	@BeforeEach
 	public void arrange() {
 		
@@ -126,7 +113,7 @@ class ResponsibleControllerTest {
 	
 	@Test
 	void testGetResponsibleShouldReturn200() throws Exception {
-		String token = auth("email@email.com", "secret");
+		String token = TestUtil.auth("email@email.com", "secret", mmvc);
 		mmvc.perform(MockMvcRequestBuilders.get(new URI("/api/responsible/Great%20Name"))
 				.header("Authorization", "Bearer " + token))
 			.andDo(print())
@@ -135,7 +122,7 @@ class ResponsibleControllerTest {
 	
 	@Test
 	void testGetResponsibleShouldReturn200WithEmployee() throws Exception {
-		String token = auth("imail@imail.com", "secret");
+		String token = TestUtil.auth("imail@imail.com", "secret", mmvc);
 		mmvc.perform(MockMvcRequestBuilders.get(new URI("/api/responsible/Great%20Name"))
 				.header("Authorization", "Bearer " + token))
 			.andDo(print())
@@ -149,7 +136,7 @@ class ResponsibleControllerTest {
 	
 	@Test
 	void testGetResponsibleShouldReturn401() throws Exception {
-		String token = auth("email@email.com", "secret");
+		String token = TestUtil.auth("email@email.com", "secret", mmvc);
 		mmvc.perform(MockMvcRequestBuilders.get(new URI("/api/responsible/Shit%20Name"))
 				.header("Authorization", "Bearer " + token))
 			.andDo(print())
@@ -164,7 +151,7 @@ class ResponsibleControllerTest {
 		json.put("street", "on top of the world");
 		json.put("neighborhood", "godness");
 		
-		String token = auth("imail@imail.com", "secret");
+		String token = TestUtil.auth("imail@imail.com", "secret", mmvc);
 		mmvc.perform(MockMvcRequestBuilders.post(new URI("/api/responsible"))
 				.header("Authorization", "Bearer " + token)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -181,7 +168,7 @@ class ResponsibleControllerTest {
 		json.put("street", "on top of the world");
 		json.put("neighborhood", "godness");
 		
-		String token = auth("email@email.com", "secret");
+		String token = TestUtil.auth("email@email.com", "secret", mmvc);
 		mmvc.perform(MockMvcRequestBuilders.post(new URI("/api/responsible"))
 				.header("Authorization", "Bearer " + token)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -192,7 +179,7 @@ class ResponsibleControllerTest {
 
 	@Test
 	void testDeleteResponsibleShouldReturn200() throws Exception {
-		String token = auth("imail@imail.com", "secret");
+		String token = TestUtil.auth("imail@imail.com", "secret", mmvc);
 		mmvc.perform(MockMvcRequestBuilders.delete(new URI("/api/responsible/Great%20Name"))
 				.header("Authorization", "Bearer " + token))
 			.andDo(print())
@@ -206,7 +193,7 @@ class ResponsibleControllerTest {
 	
 	@Test
 	void testDeleteResponsibleShouldReturn401() throws Exception {
-		String token = auth("email@email.com", "secret");
+		String token = TestUtil.auth("email@email.com", "secret", mmvc);
 		mmvc.perform(MockMvcRequestBuilders.delete(new URI("/api/responsible/Great%20Name"))
 				.header("Authorization", "Bearer " + token))
 			.andDo(print())

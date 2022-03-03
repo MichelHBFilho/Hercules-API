@@ -22,9 +22,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import br.com.michel.hercules.model.Employee;
+import br.com.michel.hercules.model.Profile;
 import br.com.michel.hercules.model.SchoolClass;
 import br.com.michel.hercules.model.User;
 import br.com.michel.hercules.repository.EmployeeRepository;
+import br.com.michel.hercules.repository.ProfileRepository;
 import br.com.michel.hercules.repository.SchoolClassRepository;
 
 @SpringBootTest
@@ -38,6 +40,8 @@ class SchoolClassControllerTest {
 	private EmployeeRepository empRepo;
 	@Autowired
 	private SchoolClassRepository schclassRepo;
+	@Autowired
+	private ProfileRepository profileRepository;
 	
 	@BeforeEach
 	void arrange() {
@@ -46,8 +50,12 @@ class SchoolClassControllerTest {
 		teacher.setCpf("25150477001");
 		teacher.setName("nome");
 		User user = new User();
+		Profile profile = new Profile();
+		profile.setAuthority("ROLE_EMPLOYEE");
+		profileRepository.save(profile);
 		user.setAndEncodePassword("pass");
 		user.setEmail("email");
+		user.addProfile(profile);
 		teacher.setLogin(user);
 		
 		empRepo.save(teacher);
@@ -57,10 +65,13 @@ class SchoolClassControllerTest {
 	void delete() {
 		schclassRepo.deleteAll();
 		empRepo.deleteAll();
+		profileRepository.deleteAll();
 	}
 	
 	@Test
 	void testNewClass() throws Exception {
+		String token = TestUtil.auth("email", "pass", mmvc);
+		
 		JSONObject json = new JSONObject();
 		json.put("classNumber", "101");
 		json.put("year", "8");
@@ -68,13 +79,15 @@ class SchoolClassControllerTest {
 		
 		mmvc.perform(MockMvcRequestBuilders.post(new URI("/api/class"))
 				.contentType(MediaType.APPLICATION_JSON)
-				.content(json.toString()))
+				.content(json.toString())
+				.header("Authorization", "Bearer " + token))
 			.andDo(print())
 			.andExpect(status().isCreated());
 	}
 
 	@Test
 	void testAddTeacher() throws Exception {
+		String token = TestUtil.auth("email", "pass", mmvc);
 		
 		SchoolClass sc = new SchoolClass();
 		sc.setClassNumber(101);
@@ -85,7 +98,8 @@ class SchoolClassControllerTest {
 		
 		mmvc.perform(MockMvcRequestBuilders.post(new URI("/api/class/101/addTeacher"))
 				.contentType(MediaType.APPLICATION_JSON)
-				.content("25150477001"))
+				.content("25150477001")
+				.header("Authorization", "Bearer " + token))
 			.andDo(print())
 			.andExpect(status().isOk());
 		
@@ -94,6 +108,8 @@ class SchoolClassControllerTest {
 
 	@Test
 	void testDeleteTeacher() throws Exception {
+		String token = TestUtil.auth("email", "pass", mmvc);
+		
 		SchoolClass sc = new SchoolClass();
 		sc.setClassNumber(101);
 		sc.setRoom("at left");
@@ -103,7 +119,8 @@ class SchoolClassControllerTest {
 		schclassRepo.save(sc);
 		
 		mmvc.perform(MockMvcRequestBuilders.delete(new URI("/api/class/101/deleteTeacher"))
-				.param("teacherCPF", "25150477001"))
+				.param("teacherCPF", "25150477001")
+				.header("Authorization", "Bearer " + token))
 			.andDo(print())
 			.andExpect(status().isOk());
 		
