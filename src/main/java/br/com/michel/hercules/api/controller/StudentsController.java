@@ -1,9 +1,10 @@
 package br.com.michel.hercules.api.controller;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
@@ -32,7 +33,6 @@ import br.com.michel.hercules.api.controller.dto.StudentDto;
 import br.com.michel.hercules.api.controller.form.GradeForm;
 import br.com.michel.hercules.api.controller.form.StudentForm;
 import br.com.michel.hercules.api.controller.form.UpdateStudentForm;
-import br.com.michel.hercules.exceptions.NotFoundException;
 import br.com.michel.hercules.model.Grade;
 import br.com.michel.hercules.model.Responsible;
 import br.com.michel.hercules.model.Student;
@@ -85,6 +85,20 @@ public class StudentsController {
 		students.forEach(s -> grades.addAll(s.getGrades()));
 		
 		return GradeDto.convert(grades);
+	}
+	
+	@GetMapping(
+			value="/student/{register}/photo",
+			produces= {"image/jpg", "image/jpeg", "image/png"}
+	)
+	public byte[] getStudentPhoto(
+			@PathVariable String register
+	) throws IOException {
+		Student student = studentRepository.findByRegister(register).get();
+		String filePath = resourcesPath + student.getStudentPicture();
+		InputStream in = getClass()
+				.getResourceAsStream(student.getStudentPicture());
+		return in.readAllBytes();
 	}
 	
 	@GetMapping("/student/{register}")
